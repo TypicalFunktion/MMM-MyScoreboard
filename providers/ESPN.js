@@ -1005,8 +1005,14 @@ module.exports = {
       // determine which display name to use
       var hTeamLong = ''
       var vTeamLong = ''
+      
+      // Handle tennis data structure first
+      if (payload.league === 'TENNIS') {
+        hTeamLong = hTeamData.athlete.displayName
+        vTeamLong = vTeamData.athlete.displayName
+      }
       // For college sports, use the displayName property
-      if (payload.league == 'NCAAF' || payload.league == 'NCAAM') {
+      else if (payload.league == 'NCAAF' || payload.league == 'NCAAM') {
         hTeamLong = (hTeamData.team.abbreviation == undefined ? '' : hTeamData.team.abbreviation + ' ') + hTeamData.team.name
         vTeamLong = (vTeamData.team.abbreviation == undefined ? '' : vTeamData.team.abbreviation + ' ') + vTeamData.team.name
       }
@@ -1049,14 +1055,12 @@ module.exports = {
 
       if (payload.league !== 'SOCCER_ON_TV' || (broadcast.length > 0)) {
         // Handle tennis data structure
-        var hTeam, vTeam, hTeamLong, vTeamLong, hTeamRanking, vTeamRanking, hScore, vScore, hTeamLogoUrl, vTeamLogoUrl
+        var hTeam, vTeam, hTeamRanking, vTeamRanking, hScore, vScore, hTeamLogoUrl, vTeamLogoUrl
         
         if (payload.league === 'TENNIS') {
           // For tennis, use athlete data instead of team data
           hTeam = hTeamData.athlete.shortName || hTeamData.athlete.displayName.substring(0, 4).toUpperCase()
           vTeam = vTeamData.athlete.shortName || vTeamData.athlete.displayName.substring(0, 4).toUpperCase()
-          hTeamLong = hTeamData.athlete.displayName
-          vTeamLong = vTeamData.athlete.displayName
           hTeamRanking = hTeamData.curatedRank ? this.formatT25Ranking(hTeamData.curatedRank.current) : null
           vTeamRanking = vTeamData.curatedRank ? this.formatT25Ranking(vTeamData.curatedRank.current) : null
           // For tennis, we'll show the current set or match status
@@ -1077,8 +1081,6 @@ module.exports = {
           // Standard team sports
           hTeam = hTeamData.team.abbreviation == undefined ? hTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : hTeamData.team.abbreviation
           vTeam = vTeamData.team.abbreviation == undefined ? vTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : vTeamData.team.abbreviation
-          hTeamLong = hTeamLong
-          vTeamLong = vTeamLong
           hTeamRanking = (payload.league == 'NCAAF' || payload.league == 'NCAAM') ? this.formatT25Ranking(hTeamData.curatedRank.current) : null
           vTeamRanking = (payload.league == 'NCAAF' || payload.league == 'NCAAM') ? this.formatT25Ranking(vTeamData.curatedRank.current) : null
           hScore = parseInt(hTeamData.score)
