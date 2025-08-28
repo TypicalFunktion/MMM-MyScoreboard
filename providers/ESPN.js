@@ -972,6 +972,10 @@ module.exports = {
           gameState = 2
           status.push('Forfeit')
           break
+        case '40': // walkover
+          gameState = 2
+          status.push('Walkover')
+          break
 
         // Other
         default: // Anything else, grab the description ESPN gives

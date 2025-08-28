@@ -693,6 +693,23 @@
   color: #7AE4FF; /* Matches existing winner color */
 }
 
+/* Override winner styling for tennis set scores to allow individual set highlighting */
+.MMM-MyScoreboard .box-score.TENNIS.winner-h .score .winner {
+  color: #7AE4FF; /* Keep winner color for winning set scores */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.winner-h .score {
+  color: inherit; /* Reset overall score color so individual set scores can be highlighted */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.winner-v .score .winner {
+  color: #7AE4FF; /* Keep winner color for winning set scores */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.winner-v .score {
+  color: inherit; /* Reset overall score color so individual set scores can be highlighted */
+}
+
 
 /* stacked / stackedWithLogos */
 .MMM-MyScoreboard .box-score.stacked {
