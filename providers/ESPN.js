@@ -1063,20 +1063,19 @@ module.exports = {
           vTeam = vTeamData.athlete.shortName || vTeamData.athlete.displayName.substring(0, 4).toUpperCase()
           hTeamRanking = hTeamData.curatedRank ? this.formatT25Ranking(hTeamData.curatedRank.current) : null
           vTeamRanking = vTeamData.curatedRank ? this.formatT25Ranking(vTeamData.curatedRank.current) : null
-          // For tennis, we'll show the current set or match status
-          if (hTeamData.linescores && hTeamData.linescores.length > 0) {
-            // Count sets won
-            hScore = hTeamData.linescores.filter(set => set.winner).length
-          } else {
-            hScore = 0
-          }
-          if (vTeamData.linescores && vTeamData.linescores.length > 0) {
-            vScore = vTeamData.linescores.filter(set => set.winner).length
-          } else {
-            vScore = 0
-          }
+          
+          // For tennis, format set scores like "6-4,6-2"
+          var setScores = this.formatTennisSetScores(hTeamData.linescores, vTeamData.linescores)
+          hScore = setScores
+          vScore = '' // We'll use hScore to display the combined set scores
+          
           hTeamLogoUrl = hTeamData.athlete.flag ? hTeamData.athlete.flag.href : ''
           vTeamLogoUrl = vTeamData.athlete.flag ? vTeamData.athlete.flag.href : ''
+          
+          // Add tournament information for tennis
+          var tournamentName = game.event ? game.event.name : 'Tennis'
+          var tournamentGender = game.event && game.event.groupings && game.event.groupings[0] && game.event.groupings[0].grouping ? 
+            game.event.groupings[0].grouping.displayName : ''
         } else {
           // Standard team sports
           hTeam = hTeamData.team.abbreviation == undefined ? hTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : hTeamData.team.abbreviation
@@ -1089,7 +1088,7 @@ module.exports = {
           vTeamLogoUrl = vTeamData.team.logo ? vTeamData.team.logo : ''
         }
         
-        formattedGamesList.push({
+        var gameData = {
           classes: classes,
           gameMode: gameState,
           hTeam: hTeam,
@@ -1105,7 +1104,15 @@ module.exports = {
           hTeamLogoUrl: hTeamLogoUrl,
           vTeamLogoUrl: vTeamLogoUrl,
           playoffStatus: playoffStatus,
-        })
+        }
+        
+        // Add tournament information for tennis
+        if (payload.league === 'TENNIS') {
+          gameData.tournamentName = tournamentName
+          gameData.tournamentGender = tournamentGender
+        }
+        
+        formattedGamesList.push(gameData)
       }
     })
 
@@ -1120,6 +1127,26 @@ module.exports = {
       return rank
     }
     return null
+  },
+
+  formatTennisSetScores: function (hLinescores, vLinescores) {
+    if (!hLinescores || !vLinescores || hLinescores.length === 0 || vLinescores.length === 0) {
+      return ''
+    }
+    
+    var setScores = []
+    var maxSets = Math.max(hLinescores.length, vLinescores.length)
+    
+    for (var i = 0; i < maxSets; i++) {
+      var hScore = hLinescores[i] ? Math.floor(hLinescores[i].value) : 0
+      var vScore = vLinescores[i] ? Math.floor(vLinescores[i].value) : 0
+      
+      if (hScore > 0 || vScore > 0) {
+        setScores.push(hScore + '-' + vScore)
+      }
+    }
+    
+    return setScores.join(', ')
   },
 
   getOrdinal: function (p) {
