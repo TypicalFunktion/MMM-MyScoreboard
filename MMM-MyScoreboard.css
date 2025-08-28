@@ -688,10 +688,9 @@
   right: initial;
 }
 
-/* Tennis winner score styling */
-.MMM-MyScoreboard .winner-score {
-  color: #00ff00; /* Green color for winning scores */
-  font-weight: bold;
+/* Tennis winner score styling - matches existing winner highlighting */
+.MMM-MyScoreboard .winner {
+  color: #7AE4FF; /* Matches existing winner color */
 }
 
 

@@ -1151,8 +1151,8 @@ module.exports = {
       
       if (hScore > 0 || vScore > 0) {
         // Show visitor score first (vScore-hScore) since visitor is typically on the left
-        var visitorScore = vWinner ? `<span class="winner-score">${vScore}</span>` : vScore
-        var homeScore = hWinner ? `<span class="winner-score">${hScore}</span>` : hScore
+        var visitorScore = vWinner ? `<span class="winner">${vScore}</span>` : vScore
+        var homeScore = hWinner ? `<span class="winner">${hScore}</span>` : hScore
         setScores.push(visitorScore + '-' + homeScore)
       }
     }
