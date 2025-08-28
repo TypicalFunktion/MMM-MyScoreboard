@@ -1146,10 +1146,14 @@ module.exports = {
     for (var i = 0; i < maxSets; i++) {
       var hScore = hLinescores[i] ? Math.floor(hLinescores[i].value) : 0
       var vScore = vLinescores[i] ? Math.floor(vLinescores[i].value) : 0
+      var hWinner = hLinescores[i] ? hLinescores[i].winner : false
+      var vWinner = vLinescores[i] ? vLinescores[i].winner : false
       
       if (hScore > 0 || vScore > 0) {
         // Show visitor score first (vScore-hScore) since visitor is typically on the left
-        setScores.push(vScore + '-' + hScore)
+        var visitorScore = vWinner ? `<span class="winner-score">${vScore}</span>` : vScore
+        var homeScore = hWinner ? `<span class="winner-score">${hScore}</span>` : hScore
+        setScores.push(visitorScore + '-' + homeScore)
       }
     }
     
