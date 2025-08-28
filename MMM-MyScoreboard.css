@@ -694,20 +694,21 @@
 }
 
 /* Override winner styling for tennis set scores to allow individual set highlighting */
-.MMM-MyScoreboard .box-score.TENNIS.winner-h .score .winner {
-  color: #7AE4FF; /* Keep winner color for winning set scores */
+/* More specific selectors to override existing winner CSS */
+.MMM-MyScoreboard .wrapper.highlight-winners .box-score.TENNIS.final.winner-h .score .winner {
+  color: #7AE4FF !important; /* Keep winner color for winning set scores */
 }
 
-.MMM-MyScoreboard .box-score.TENNIS.winner-h .score {
-  color: inherit; /* Reset overall score color so individual set scores can be highlighted */
+.MMM-MyScoreboard .wrapper.highlight-winners .box-score.TENNIS.final.winner-h .score {
+  color: inherit !important; /* Reset overall score color so individual set scores can be highlighted */
 }
 
-.MMM-MyScoreboard .box-score.TENNIS.winner-v .score .winner {
-  color: #7AE4FF; /* Keep winner color for winning set scores */
+.MMM-MyScoreboard .wrapper.highlight-winners .box-score.TENNIS.final.winner-v .score .winner {
+  color: #7AE4FF !important; /* Keep winner color for winning set scores */
 }
 
-.MMM-MyScoreboard .box-score.TENNIS.winner-v .score {
-  color: inherit; /* Reset overall score color so individual set scores can be highlighted */
+.MMM-MyScoreboard .wrapper.highlight-winners .box-score.TENNIS.final.winner-v .score {
+  color: inherit !important; /* Reset overall score color so individual set scores can be highlighted */
 }
 
 
