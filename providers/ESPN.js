@@ -638,7 +638,11 @@ module.exports = {
                       date: competition.date,
                       status: competition.status,
                       venue: competition.venue,
-                      competitions: [competition]
+                      competitions: [competition],
+                      // Preserve tournament information
+                      eventName: event.name,
+                      eventShortName: event.shortName,
+                      grouping: grouping.grouping
                     }
                     body2.events.push(newEvent)
                   })
@@ -1081,9 +1085,8 @@ module.exports = {
           vTeamLogoUrl = vTeamData.athlete.flag ? vTeamData.athlete.flag.href : ''
           
           // Add tournament information for tennis
-          var tournamentName = game.event ? game.event.name : 'Tennis'
-          var tournamentGender = game.event && game.event.groupings && game.event.groupings[0] && game.event.groupings[0].grouping ? 
-            game.event.groupings[0].grouping.displayName : ''
+          var tournamentName = game.eventName || 'Tennis' // Get from preserved event data
+          var tournamentGender = game.grouping ? game.grouping.displayName : ''
         } else {
           // Standard team sports
           hTeam = hTeamData.team.abbreviation == undefined ? hTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : hTeamData.team.abbreviation
