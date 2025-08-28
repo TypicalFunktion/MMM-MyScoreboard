@@ -649,7 +649,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code.home {
-  left: 180px; /* Adjusted for wider visitor name */
+  left: 150px; /* Adjusted to align with home logo */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score.visitor {
@@ -657,7 +657,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score.home {
-  left: 310px; /* Adjusted for wider visitor name and score */
+  left: 280px; /* Adjusted for new home name position */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .status {

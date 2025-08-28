@@ -620,14 +620,30 @@ Module.register('MMM-MyScoreboard', {
     // add classes to final games
     if (gameObj.gameMode == this.gameModes.FINAL) {
       boxScore.classList.add('final')
-      if (gameObj.hScore > gameObj.vScore) {
-        boxScore.classList.add('winner-h')
-      }
-      else if (gameObj.vScore > gameObj.hScore) {
-        boxScore.classList.add('winner-v')
-      }
-      else {
-        boxScore.classList.add('tie')
+      
+      // Special handling for tennis winner determination
+      if (gameObj.hWinner !== undefined && gameObj.vWinner !== undefined) {
+        // Tennis: use direct winner information from API
+        if (gameObj.hWinner) {
+          boxScore.classList.add('winner-h')
+        }
+        else if (gameObj.vWinner) {
+          boxScore.classList.add('winner-v')
+        }
+        else {
+          boxScore.classList.add('tie')
+        }
+      } else {
+        // Standard sports: determine winner based on scores
+        if (gameObj.hScore > gameObj.vScore) {
+          boxScore.classList.add('winner-h')
+        }
+        else if (gameObj.vScore > gameObj.hScore) {
+          boxScore.classList.add('winner-v')
+        }
+        else {
+          boxScore.classList.add('tie')
+        }
       }
     }
 

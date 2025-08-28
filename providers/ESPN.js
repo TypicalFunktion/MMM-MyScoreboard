@@ -1059,15 +1059,19 @@ module.exports = {
         
         if (payload.league === 'TENNIS') {
           // For tennis, use athlete data instead of team data
-          hTeam = hTeamData.athlete.shortName || hTeamData.athlete.displayName.substring(0, 4).toUpperCase()
-          vTeam = vTeamData.athlete.shortName || vTeamData.athlete.displayName.substring(0, 4).toUpperCase()
+          hTeam = this.formatTennisLastName(hTeamData.athlete.displayName)
+          vTeam = this.formatTennisLastName(vTeamData.athlete.displayName)
           hTeamRanking = hTeamData.curatedRank ? this.formatT25Ranking(hTeamData.curatedRank.current) : null
           vTeamRanking = vTeamData.curatedRank ? this.formatT25Ranking(vTeamData.curatedRank.current) : null
           
-          // For tennis, format set scores like "6-4,6-2"
+          // For tennis, format set scores like "6-4, 7-6, 6-2" with visitor score first
           var setScores = this.formatTennisSetScores(hTeamData.linescores, vTeamData.linescores)
           hScore = setScores
           vScore = '' // We'll use hScore to display the combined set scores
+          
+          // For tennis, use the direct winner information from the API
+          var hWinner = hTeamData.winner || false
+          var vWinner = vTeamData.winner || false
           
           hTeamLogoUrl = hTeamData.athlete.flag ? hTeamData.athlete.flag.href : ''
           vTeamLogoUrl = vTeamData.athlete.flag ? vTeamData.athlete.flag.href : ''
@@ -1110,6 +1114,8 @@ module.exports = {
         if (payload.league === 'TENNIS') {
           gameData.tournamentName = tournamentName
           gameData.tournamentGender = tournamentGender
+          gameData.hWinner = hWinner
+          gameData.vWinner = vWinner
         }
         
         formattedGamesList.push(gameData)
@@ -1142,12 +1148,29 @@ module.exports = {
       var vScore = vLinescores[i] ? Math.floor(vLinescores[i].value) : 0
       
       if (hScore > 0 || vScore > 0) {
-        setScores.push(hScore + '-' + vScore)
+        // Show visitor score first (vScore-hScore) since visitor is typically on the left
+        setScores.push(vScore + '-' + hScore)
       }
     }
     
     return setScores.join(', ')
   },
+
+  formatTennisLastName: function (fullName) {
+    if (!fullName) {
+      return 'Unknown'
+    }
+    
+    // Split the name and get the last part
+    var nameParts = fullName.trim().split(' ')
+    if (nameParts.length > 1) {
+      return nameParts[nameParts.length - 1]
+    }
+    
+    return fullName
+  },
+
+
 
   getOrdinal: function (p) {
     var mod10 = p % 10
