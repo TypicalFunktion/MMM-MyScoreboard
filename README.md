@@ -128,6 +128,14 @@ Currently this module supports the following leagues.  Use the bold uppercase sh
 * `NCAAW` - NCAA Women's College Basketball
 * `NLL` - National Lacrosse League
 * `PLL` - Premier Lacrosse League
+* `TENNIS` - Major Tennis Tournaments (Grand Slams and other major events)
+
+**Note:** For tennis, you can use the `teams` parameter to filter for specific players or by rankings. You can use any of the following formats:
+- **Player names**: Full name (`"Novak Djokovic"`), short name (`"N. Djokovic"`), or display name
+- **Ranking filters**: `"@T10"` for top 10 players, `"@T25"` for top 25 players, etc.
+- **Combined**: Mix player names and ranking filters
+
+Leave the `teams` array empty to show all matches. The module will display player names, rankings, and their country flags.
 
 ### Other Leagues
 

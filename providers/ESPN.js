@@ -59,6 +59,7 @@ module.exports = {
     'NHL': 'hockey/nhl',
     'MLS': 'soccer/usa.1',
     'RUGBY': 'rugby/scorepanel',
+    'TENNIS': 'tennis/all',
 
     // International Soccer
     'AFC_ASIAN_CUP': 'soccer/afc.cup',
@@ -620,6 +621,35 @@ module.exports = {
         body = body2
       }
 
+      // Handle tennis data structure
+      if (payload.league === 'TENNIS') {
+        var body2 = { events: [] }
+        if (body.events && body.events.length > 0) {
+          // Tennis data has matches in events[0].groupings[0].competitions
+          // We need to convert this to the standard format
+          body.events.forEach((event) => {
+            if (event.groupings && event.groupings.length > 0) {
+              event.groupings.forEach((grouping) => {
+                if (grouping.competitions && grouping.competitions.length > 0) {
+                  grouping.competitions.forEach((competition) => {
+                    // Create a new event for each competition
+                    var newEvent = {
+                      id: competition.id,
+                      date: competition.date,
+                      status: competition.status,
+                      venue: competition.venue,
+                      competitions: [competition]
+                    }
+                    body2.events.push(newEvent)
+                  })
+                }
+              })
+            }
+          })
+        }
+        body = body2
+      }
+
       this.noGamesToday = false
       callback(self.formatScores(payload, body, moment(gameDate).format('YYYYMMDD')), payload.index, this.noGamesToday)
     }
@@ -636,6 +666,41 @@ module.exports = {
     var filteredGamesList
     if (payload.teams != null) { // filter to teams list
       filteredGamesList = data.events.filter(function (game) {
+        // Handle tennis data structure
+        if (payload.league === 'TENNIS') {
+          // For tennis, filter by player names or rankings
+          if (payload.teams.length === 0) {
+            return true // Show all matches if no specific players specified
+          }
+          
+          // Check for ranking filters like @T10, @T25, etc.
+          const rankingFilters = payload.teams.filter(team => team.startsWith('@T'))
+          if (rankingFilters.length > 0) {
+            const player1 = game.competitions[0].competitors[0]
+            const player2 = game.competitions[0].competitors[1]
+            
+            return rankingFilters.some(filter => {
+              const rankLimit = parseInt(filter.substring(2)) // Extract number from @T10, @T25, etc.
+              return (player1.curatedRank && player1.curatedRank.current >= 1 && player1.curatedRank.current <= rankLimit) ||
+                     (player2.curatedRank && player2.curatedRank.current >= 1 && player2.curatedRank.current <= rankLimit)
+            })
+          }
+          
+          // Check if any of the specified players are in this match
+          const player1 = game.competitions[0].competitors[0].athlete
+          const player2 = game.competitions[0].competitors[1].athlete
+          
+          return payload.teams.some(playerName => {
+            // Check against full name, short name, and display name
+            return playerName.toLowerCase() === player1.displayName.toLowerCase() ||
+                   playerName.toLowerCase() === player1.shortName.toLowerCase() ||
+                   playerName.toLowerCase() === player1.fullName.toLowerCase() ||
+                   playerName.toLowerCase() === player2.displayName.toLowerCase() ||
+                   playerName.toLowerCase() === player2.shortName.toLowerCase() ||
+                   playerName.toLowerCase() === player2.fullName.toLowerCase()
+          })
+        }
+        
         // if "@T25" is in the teams list, it indicates to include teams ranked in the top 25
         if (payload.teams.indexOf('@T25') != -1
           && ((game.competitions[0].competitors[0].curatedRank.current >= 1
@@ -672,13 +737,24 @@ module.exports = {
       }
 
       // start times are the same.  Now sort by away team short codes
-      var aTteam = (a.competitions[0].competitors[0].homeAway == 'away'
-        ? a.competitions[0].competitors[0].team.abbreviation
-        : a.competitions[0].competitors[1].team.abbreviation)
-
-      var bTteam = (b.competitions[0].competitors[0].homeAway == 'away'
-        ? b.competitions[0].competitors[0].team.abbreviation
-        : b.competitions[0].competitors[1].team.abbreviation)
+      var aTteam, bTteam
+      
+      if (payload.league === 'TENNIS') {
+        // For tennis, use player names for sorting
+        aTteam = (a.competitions[0].competitors[0].homeAway == 'away'
+          ? a.competitions[0].competitors[0].athlete.shortName
+          : a.competitions[0].competitors[1].athlete.shortName)
+        bTteam = (b.competitions[0].competitors[0].homeAway == 'away'
+          ? b.competitions[0].competitors[0].athlete.shortName
+          : b.competitions[0].competitors[1].athlete.shortName)
+      } else {
+        aTteam = (a.competitions[0].competitors[0].homeAway == 'away'
+          ? a.competitions[0].competitors[0].team.abbreviation
+          : a.competitions[0].competitors[1].team.abbreviation)
+        bTteam = (b.competitions[0].competitors[0].homeAway == 'away'
+          ? b.competitions[0].competitors[0].team.abbreviation
+          : b.competitions[0].competitors[1].team.abbreviation)
+      }
 
       if (aTteam < bTteam) {
         return -1
@@ -972,21 +1048,60 @@ module.exports = {
       }
 
       if (payload.league !== 'SOCCER_ON_TV' || (broadcast.length > 0)) {
+        // Handle tennis data structure
+        var hTeam, vTeam, hTeamLong, vTeamLong, hTeamRanking, vTeamRanking, hScore, vScore, hTeamLogoUrl, vTeamLogoUrl
+        
+        if (payload.league === 'TENNIS') {
+          // For tennis, use athlete data instead of team data
+          hTeam = hTeamData.athlete.shortName || hTeamData.athlete.displayName.substring(0, 4).toUpperCase()
+          vTeam = vTeamData.athlete.shortName || vTeamData.athlete.displayName.substring(0, 4).toUpperCase()
+          hTeamLong = hTeamData.athlete.displayName
+          vTeamLong = vTeamData.athlete.displayName
+          hTeamRanking = hTeamData.curatedRank ? this.formatT25Ranking(hTeamData.curatedRank.current) : null
+          vTeamRanking = vTeamData.curatedRank ? this.formatT25Ranking(vTeamData.curatedRank.current) : null
+          // For tennis, we'll show the current set or match status
+          if (hTeamData.linescores && hTeamData.linescores.length > 0) {
+            // Count sets won
+            hScore = hTeamData.linescores.filter(set => set.winner).length
+          } else {
+            hScore = 0
+          }
+          if (vTeamData.linescores && vTeamData.linescores.length > 0) {
+            vScore = vTeamData.linescores.filter(set => set.winner).length
+          } else {
+            vScore = 0
+          }
+          hTeamLogoUrl = hTeamData.athlete.flag ? hTeamData.athlete.flag.href : ''
+          vTeamLogoUrl = vTeamData.athlete.flag ? vTeamData.athlete.flag.href : ''
+        } else {
+          // Standard team sports
+          hTeam = hTeamData.team.abbreviation == undefined ? hTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : hTeamData.team.abbreviation
+          vTeam = vTeamData.team.abbreviation == undefined ? vTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : vTeamData.team.abbreviation
+          hTeamLong = hTeamLong
+          vTeamLong = vTeamLong
+          hTeamRanking = (payload.league == 'NCAAF' || payload.league == 'NCAAM') ? this.formatT25Ranking(hTeamData.curatedRank.current) : null
+          vTeamRanking = (payload.league == 'NCAAF' || payload.league == 'NCAAM') ? this.formatT25Ranking(vTeamData.curatedRank.current) : null
+          hScore = parseInt(hTeamData.score)
+          vScore = parseInt(vTeamData.score)
+          hTeamLogoUrl = hTeamData.team.logo ? hTeamData.team.logo : ''
+          vTeamLogoUrl = vTeamData.team.logo ? vTeamData.team.logo : ''
+        }
+        
         formattedGamesList.push({
           classes: classes,
           gameMode: gameState,
-          hTeam: hTeamData.team.abbreviation == undefined ? hTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : hTeamData.team.abbreviation,
-          vTeam: vTeamData.team.abbreviation == undefined ? vTeamData.team.name.substring(0, 4).toUpperCase() + ' ' : vTeamData.team.abbreviation,
+          hTeam: hTeam,
+          vTeam: vTeam,
           hTeamLong: hTeamLong,
           vTeamLong: vTeamLong,
-          hTeamRanking: (payload.league == 'NCAAF' || payload.league == 'NCAAM') ? this.formatT25Ranking(hTeamData.curatedRank.current) : null,
-          vTeamRanking: (payload.league == 'NCAAF' || payload.league == 'NCAAM') ? this.formatT25Ranking(vTeamData.curatedRank.current) : null,
-          hScore: parseInt(hTeamData.score),
-          vScore: parseInt(vTeamData.score),
+          hTeamRanking: hTeamRanking,
+          vTeamRanking: vTeamRanking,
+          hScore: hScore,
+          vScore: vScore,
           status: status,
           broadcast: broadcast,
-          hTeamLogoUrl: hTeamData.team.logo ? hTeamData.team.logo : '',
-          vTeamLogoUrl: vTeamData.team.logo ? vTeamData.team.logo : '',
+          hTeamLogoUrl: hTeamLogoUrl,
+          vTeamLogoUrl: vTeamLogoUrl,
           playoffStatus: playoffStatus,
         })
       }

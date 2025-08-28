@@ -51,6 +51,10 @@ Module.register('MMM-MyScoreboard', {
         league: 'CFL',
         teams: ['TOR'],
       },
+      {
+        league: 'TENNIS',
+        teams: [], // Empty array means show all matches
+      },
     ],
   },
 
@@ -84,6 +88,9 @@ Module.register('MMM-MyScoreboard', {
     'NBAG': { provider: 'ESPN', logoFormat: 'url' },
     'NLL': { provider: 'ESPN', logoFormat: 'url' },
     'PLL': { provider: 'ESPN', logoFormat: 'url' },
+
+    // Tennis
+    'TENNIS': { provider: 'ESPN', logoFormat: 'url' },
 
     // International Soccer
     'ALL_SOCCER': { provider: 'Scorepanel', logoFormat: 'url', homeTeamFirst: true },
