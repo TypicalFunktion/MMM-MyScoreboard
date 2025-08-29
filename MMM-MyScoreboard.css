@@ -651,7 +651,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score {
-  width: 140px; /* Increased for tennis set scores */
+  width: 91px; /* Width from score position to status area (350px - 259px) */
   font-size: 14px; /* Smaller font for better fit */
   text-align: right; /* Right-align scores */
 }
@@ -681,7 +681,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine .score {
-  width: 140px; /* Increased for tennis set scores */
+  width: calc(100% - 630px); /* Width from score position to status area */
   font-size: 14px; /* Smaller font for better fit */
   text-align: right; /* Right-align scores */
 }
@@ -699,7 +699,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine .score.home {
-  left: 270px; /* Positioned after home name */
+  left: 220px; /* 10px after home name (125px + 85px + 10px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine .status {
@@ -716,7 +716,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score.home {
-  left: 280px; /* Adjusted for new home name position */
+  left: 259px; /* 10px after home name (149px + 100px + 10px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .status {
@@ -738,7 +738,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.home-team-first .score.home {
-  left: 120px;
+  left: 140px; /* 10px after home name (30px + 100px + 10px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.home-team-first .status {
@@ -750,34 +750,42 @@
 /* Adjust tennis score positioning when broadcast logos are present */
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast .score.visitor {
   left: 80px; /* Move left when broadcast logos are present */
+  width: 129px; /* Width from score position to status area (350px - 80px - 141px for score width) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast .score.home {
-  left: 240px; /* Move left when broadcast logos are present */
+  left: 219px; /* 10px after home name when broadcast logos are present */
+  width: 131px; /* Width from score position to status area (350px - 219px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast.home-team-first .score.visitor {
   left: 270px; /* Move left when broadcast logos are present */
+  width: 80px; /* Width from score position to status area (350px - 270px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast.home-team-first .score.home {
-  left: 80px; /* Move left when broadcast logos are present */
+  left: 100px; /* 10px after home name when broadcast logos are present */
+  width: 250px; /* Width from score position to status area (350px - 100px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast .score.visitor {
   left: 60px; /* Move left when broadcast logos are present */
+  width: calc(100% - 670px); /* Width from score position to status area */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast .score.home {
   left: 240px; /* Move left when broadcast logos are present */
+  width: calc(100% - 850px); /* Width from score position to status area */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast.home-team-first .score.visitor {
   left: 240px; /* Move left when broadcast logos are present */
+  width: calc(100% - 850px); /* Width from score position to status area */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast.home-team-first .score.home {
   left: 60px; /* Move left when broadcast logos are present */
+  width: calc(100% - 670px); /* Width from score position to status area */
 }
 
 /* Tennis winner score styling - matches existing winner highlighting */
