@@ -653,7 +653,7 @@
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score {
   width: 91px; /* Width from score position to status area (350px - 259px) */
   font-size: 14px; /* Smaller font for better fit */
-  text-align: right; /* Right-align scores */
+  text-align: left; /* Left-align scores */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code.visitor {
@@ -683,7 +683,7 @@
 .MMM-MyScoreboard .box-score.TENNIS.oneLine .score {
   width: calc(100% - 630px); /* Width from score position to status area */
   font-size: 14px; /* Smaller font for better fit */
-  text-align: right; /* Right-align scores */
+  text-align: left; /* Left-align scores */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLine .team-short-code.visitor {
