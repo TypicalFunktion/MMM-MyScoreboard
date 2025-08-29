@@ -603,13 +603,13 @@
   right: initial;
 }
 .MMM-MyScoreboard .box-score.oneLineWithLogos .logo.visitor {
-  left: 0px;
+  left: 0px; /* Logo at 0px */
 }
 .MMM-MyScoreboard .box-score.oneLineWithLogos .logo.home {
   left: 120px;
 }
 .MMM-MyScoreboard .box-score.oneLineWithLogos .team-short-code.visitor {
-  left: 30px;
+  left: 29px; /* 5px from logo (24px logo width + 5px gap) */
 }
 .MMM-MyScoreboard .box-score.oneLineWithLogos .team-short-code.home {
   left: 150px;
@@ -631,7 +631,7 @@
   left: 150px;
 }
 .MMM-MyScoreboard .box-score.oneLineWithLogos.home-team-first .team-short-code.home {
-  left: 30px;
+  left: 29px; /* 5px from logo (24px logo width + 5px gap) */
 }
 .MMM-MyScoreboard .box-score.oneLineWithLogos.home-team-first .score.visitor {
   left: 202px;
@@ -657,7 +657,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code.visitor {
-  left: 30px;
+  left: 29px; /* 5px from logo (24px logo width + 5px gap) */
 }
 
 
