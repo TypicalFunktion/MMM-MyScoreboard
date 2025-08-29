@@ -581,7 +581,18 @@
 
 .MMM-MyScoreboard .box-score.oneLine .status > span,
 .MMM-MyScoreboard .box-score.oneLineWithLogos .status > span {
-  padding: 0 2px;
+  padding: 0 4px; /* Increased padding for better spacing */
+}
+
+/* General spacing improvements for better readability */
+.MMM-MyScoreboard .box-score.oneLine .team-short-code,
+.MMM-MyScoreboard .box-score.oneLineWithLogos .team-short-code {
+  letter-spacing: 0.5px; /* Slight letter spacing for better readability */
+}
+
+.MMM-MyScoreboard .box-score.oneLine .status,
+.MMM-MyScoreboard .box-score.oneLineWithLogos .status {
+  letter-spacing: 0.3px; /* Slight letter spacing for status text */
 }
 
 
@@ -636,16 +647,64 @@
 
 /* Tennis-specific adjustments for oneLineWithLogos */
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code {
-  width: 80px; /* Increased from 52px for longer player names */
+  width: 85px; /* Increased for longer player names */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score {
-  width: 120px; /* Increased from 40px for tennis set scores */
-  font-size: 16px; /* Slightly smaller font for longer scores */
+  width: 140px; /* Increased for tennis set scores */
+  font-size: 14px; /* Smaller font for better fit */
+  text-align: right; /* Right-align scores */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code.visitor {
   left: 30px;
+}
+
+
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score.visitor {
+  left: 115px; /* Positioned after visitor name */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score.home {
+  left: 240px; /* Positioned after home name */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .status {
+  width: calc(100% - 380px); /* Adjusted width for better spacing */
+  right: 0px;
+}
+
+/* Tennis-specific adjustments for oneLine (without logos) */
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .team-short-code {
+  width: 85px; /* Increased for longer player names */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .score {
+  width: 140px; /* Increased for tennis set scores */
+  font-size: 14px; /* Smaller font for better fit */
+  text-align: right; /* Right-align scores */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .team-short-code.visitor {
+  left: 0px;
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .team-short-code.home {
+  left: 125px; /* Adjusted for better spacing */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .score.visitor {
+  left: 90px; /* Positioned after visitor name */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .score.home {
+  left: 270px; /* Positioned after home name */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .status {
+  width: calc(100% - 410px); /* Adjusted width for better spacing */
+  right: 0px;
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code.home {
