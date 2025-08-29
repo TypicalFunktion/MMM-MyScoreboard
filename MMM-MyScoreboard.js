@@ -811,17 +811,62 @@ Module.register('MMM-MyScoreboard', {
       // Handle yesterday's data
       if (self.sportsDataYd[sport] && self.sportsDataYd[sport]['scores'].length > 0) {
         // anyGames = true
-        if (self.config.showLeagueSeparators) {
-          leagueSeparator = document.createElement('div')
-          leagueSeparator.classList.add('league-separator')
-          leagueSeparator.innerHTML = '<span>' + sport + ' - Yesterday</span>'
-          wrapper.appendChild(leagueSeparator)
+        
+        // Special handling for tennis tournaments (yesterday's data)
+        if (scores['league'] === 'TENNIS') {
+          // Group tennis matches by tournament and gender
+          var tournamentGroups = {}
+          self.sportsDataYd[sport]['scores'].forEach(function (game) {
+            var tournamentKey = game.tournamentName || 'Tennis'
+            var genderKey = game.tournamentGender || ''
+            var fullKey = tournamentKey + '|' + genderKey
+            
+            if (!tournamentGroups[fullKey]) {
+              tournamentGroups[fullKey] = {
+                tournamentName: tournamentKey,
+                tournamentGender: genderKey,
+                games: []
+              }
+            }
+            tournamentGroups[fullKey].games.push(game)
+          })
+          
+          // Display each tournament/gender group separately
+          Object.keys(tournamentGroups).forEach(function (tournamentKey) {
+            var group = tournamentGroups[tournamentKey]
+            var separatorText = group.tournamentName
+            if (group.tournamentGender) {
+              separatorText += ' - ' + group.tournamentGender
+            }
+            separatorText += ' - Yesterday'
+            
+            if (self.config.showLeagueSeparators) {
+              leagueSeparator = document.createElement('div')
+              leagueSeparator.classList.add('league-separator')
+              leagueSeparator.innerHTML = '<span>' + separatorText + '</span>'
+              wrapper.appendChild(leagueSeparator)
+            }
+            
+            group.games.forEach(function (game, gidx) {
+              var boxScore = self.boxScoreFactory(scores['league'], game, sport)
+              boxScore.classList.add(gidx % 2 == 0 ? 'odd' : 'even')
+              wrapper.appendChild(boxScore)
+            })
+          })
+        } else {
+          // Standard league separator for non-tennis sports (yesterday's data)
+          if (self.config.showLeagueSeparators) {
+            leagueSeparator = document.createElement('div')
+            leagueSeparator.classList.add('league-separator')
+            leagueSeparator.innerHTML = '<span>' + sport + ' - Yesterday</span>'
+            wrapper.appendChild(leagueSeparator)
+          }
+          self.sportsDataYd[sport]['scores'].forEach(function (game, gidx) {
+            var boxScore = self.boxScoreFactory(scores['league'], game, sport)
+            boxScore.classList.add(gidx % 2 == 0 ? 'odd' : 'even')
+            wrapper.appendChild(boxScore)
+          })
         }
-        self.sportsDataYd[sport]['scores'].forEach(function (game, gidx) {
-          var boxScore = self.boxScoreFactory(scores['league'], game, sport)
-          boxScore.classList.add(gidx % 2 == 0 ? 'odd' : 'even')
-          wrapper.appendChild(boxScore)
-        })
       }
     }
 
@@ -830,17 +875,62 @@ Module.register('MMM-MyScoreboard', {
       leagueSeparator = []
       if (scores['scores'].length > 0 && !self.sportsData[sport]) {
         // anyGames = true
-        if (self.config.showLeagueSeparators) {
-          leagueSeparator = document.createElement('div')
-          leagueSeparator.classList.add('league-separator')
-          leagueSeparator.innerHTML = '<span>' + sport + ' - Yesterday</span>'
-          wrapper.appendChild(leagueSeparator)
+        
+        // Special handling for tennis tournaments (yesterday's data only)
+        if (scores['league'] === 'TENNIS') {
+          // Group tennis matches by tournament and gender
+          var tournamentGroups = {}
+          scores['scores'].forEach(function (game) {
+            var tournamentKey = game.tournamentName || 'Tennis'
+            var genderKey = game.tournamentGender || ''
+            var fullKey = tournamentKey + '|' + genderKey
+            
+            if (!tournamentGroups[fullKey]) {
+              tournamentGroups[fullKey] = {
+                tournamentName: tournamentKey,
+                tournamentGender: genderKey,
+                games: []
+              }
+            }
+            tournamentGroups[fullKey].games.push(game)
+          })
+          
+          // Display each tournament/gender group separately
+          Object.keys(tournamentGroups).forEach(function (tournamentKey) {
+            var group = tournamentGroups[tournamentKey]
+            var separatorText = group.tournamentName
+            if (group.tournamentGender) {
+              separatorText += ' - ' + group.tournamentGender
+            }
+            separatorText += ' - Yesterday'
+            
+            if (self.config.showLeagueSeparators) {
+              leagueSeparator = document.createElement('div')
+              leagueSeparator.classList.add('league-separator')
+              leagueSeparator.innerHTML = '<span>' + separatorText + '</span>'
+              wrapper.appendChild(leagueSeparator)
+            }
+            
+            group.games.forEach(function (game, gidx) {
+              var boxScore = self.boxScoreFactory(scores['league'], game, sport)
+              boxScore.classList.add(gidx % 2 == 0 ? 'odd' : 'even')
+              wrapper.appendChild(boxScore)
+            })
+          })
+        } else {
+          // Standard league separator for non-tennis sports (yesterday's data only)
+          if (self.config.showLeagueSeparators) {
+            leagueSeparator = document.createElement('div')
+            leagueSeparator.classList.add('league-separator')
+            leagueSeparator.innerHTML = '<span>' + sport + ' - Yesterday</span>'
+            wrapper.appendChild(leagueSeparator)
+          }
+          scores['scores'].forEach(function (game, gidx) {
+            var boxScore = self.boxScoreFactory(scores['league'], game, sport)
+            boxScore.classList.add(gidx % 2 == 0 ? 'odd' : 'even')
+            wrapper.appendChild(boxScore)
+          })
         }
-        scores['scores'].forEach(function (game, gidx) {
-          var boxScore = self.boxScoreFactory(scores['league'], game, sport)
-          boxScore.classList.add(gidx % 2 == 0 ? 'odd' : 'even')
-          wrapper.appendChild(boxScore)
-        })
       }
     }
 
