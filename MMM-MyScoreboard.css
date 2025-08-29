@@ -747,6 +747,39 @@
   right: initial;
 }
 
+/* Adjust tennis score positioning when broadcast logos are present */
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast .score.visitor {
+  left: 80px; /* Move left when broadcast logos are present */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast .score.home {
+  left: 240px; /* Move left when broadcast logos are present */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast.home-team-first .score.visitor {
+  left: 270px; /* Move left when broadcast logos are present */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.has-broadcast.home-team-first .score.home {
+  left: 80px; /* Move left when broadcast logos are present */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast .score.visitor {
+  left: 60px; /* Move left when broadcast logos are present */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast .score.home {
+  left: 240px; /* Move left when broadcast logos are present */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast.home-team-first .score.visitor {
+  left: 240px; /* Move left when broadcast logos are present */
+}
+
+.MMM-MyScoreboard .box-score.TENNIS.oneLine.has-broadcast.home-team-first .score.home {
+  left: 60px; /* Move left when broadcast logos are present */
+}
+
 /* Tennis winner score styling - matches existing winner highlighting */
 .MMM-MyScoreboard .winner {
   color: #7AE4FF; /* Matches existing winner color */

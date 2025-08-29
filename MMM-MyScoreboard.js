@@ -618,6 +618,11 @@ Module.register('MMM-MyScoreboard', {
         vTeamScore.classList.add('score', 'visitor')
         vTeamScore.innerHTML = gameObj.hScore
         boxScore.appendChild(vTeamScore)
+        
+        // Add class to adjust positioning when broadcast logos are present
+        if (gameObj.broadcast && gameObj.broadcast.length > 0) {
+          boxScore.classList.add('has-broadcast')
+        }
       } else {
         // Standard sports: show separate home and visitor scores
         var hTeamScore = document.createElement('span')
