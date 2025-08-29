@@ -1238,3 +1238,21 @@
   text-overflow: ellipsis;
   width: 100%;
 } */
+
+/* Tennis score styling - smaller font for set scores */
+.MMM-MyScoreboard .box-score .score.visitor {
+  font-size: 16px;
+}
+
+.MMM-MyScoreboard .box-score.oneLine .score.visitor,
+.MMM-MyScoreboard .box-score.oneLineWithLogos .score.visitor {
+  font-size: 14px;
+}
+
+.MMM-MyScoreboard .box-score.smallLogos .score.visitor {
+  font-size: 14px;
+}
+
+.MMM-MyScoreboard .box-score.mediumLogos .score.visitor {
+  font-size: 20px;
+}
