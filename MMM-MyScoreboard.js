@@ -92,7 +92,7 @@ Module.register('MMM-MyScoreboard', {
     'PLL': { provider: 'ESPN', logoFormat: 'url' },
 
     // Tennis
-    'TENNIS': { provider: 'ESPN', logoFormat: 'url' },
+    'TENNIS': { provider: 'ESPN', logoFormat: 'url', homeTeamFirst: true },
 
     // International Soccer
     'ALL_SOCCER': { provider: 'Scorepanel', logoFormat: 'url', homeTeamFirst: true },
@@ -550,16 +550,19 @@ Module.register('MMM-MyScoreboard', {
     // and oneLineWithLogos view styles
     if (gameObj.gameMode == this.gameModes.FUTURE
       && (viewStyle == 'oneLine' || viewStyle == 'oneLineWithLogos')) {
-      var vsSymbol = document.createElement('span')
-      vsSymbol.classList.add('vs-symbol')
-      // Soccer games we don't say AT (@) but VS thus the HOME team is first (Chelsea Vs Manchester - Chelsea's Home instead of Manchester @ Chelsea)
-      if (this.supportedLeagues[league].homeTeamFirst) {
-        vsSymbol.innerHTML = 'vs'
+      // Tennis matches don't show any separator symbol
+      if (league !== 'TENNIS') {
+        var vsSymbol = document.createElement('span')
+        vsSymbol.classList.add('vs-symbol')
+        // Soccer games we don't say AT (@) but VS thus the HOME team is first (Chelsea Vs Manchester - Chelsea's Home instead of Manchester @ Chelsea)
+        if (this.supportedLeagues[league].homeTeamFirst) {
+          vsSymbol.innerHTML = 'vs'
+        }
+        else {
+          vsSymbol.innerHTML = '@'
+        }
+        boxScore.appendChild(vsSymbol)
       }
-      else {
-        vsSymbol.innerHTML = '@'
-      }
-      boxScore.appendChild(vsSymbol)
     }
 
     // add game status

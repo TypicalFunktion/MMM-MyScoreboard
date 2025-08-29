@@ -1054,6 +1054,10 @@ module.exports = {
           gameState = 2
           status.push('Walkover')
           break
+        case '41': // retired
+          gameState = 2
+          status.push('Retired')
+          break
 
         // Other
         default: // Anything else, grab the description ESPN gives
