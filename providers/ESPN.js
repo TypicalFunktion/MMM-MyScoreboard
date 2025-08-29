@@ -672,6 +672,14 @@ module.exports = {
       filteredGamesList = data.events.filter(function (game) {
         // Handle tennis data structure
         if (payload.league === 'TENNIS') {
+          // Filter out doubles matches - only show singles matches
+          if (game.competitions && game.competitions[0] && game.competitions[0].competitors) {
+            const competitorCount = game.competitions[0].competitors.length;
+            if (competitorCount !== 2) {
+              return false; // Skip doubles matches (4 competitors) or other match types
+            }
+          }
+          
           // For tennis, filter by player names, rankings, or groupings
           if (payload.teams.length === 0 && (!payload.groupings || payload.groupings.length === 0)) {
             return true // Show all matches if no filters specified

@@ -53,7 +53,7 @@ Module.register('MMM-MyScoreboard', {
       },
       {
         league: 'TENNIS',
-        teams: [], // Empty array means show all matches
+        teams: [], // Empty array means show all singles matches (doubles are automatically filtered out)
       },
     ],
   },

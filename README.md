@@ -14,6 +14,22 @@ This is a fork of the original MMM-MyScoreboard from user jclarke0000.  It has b
 
 Intended to match the design aesthetic of, and pair nicely with, [MMM-MyStandings](https://github.com/dathbe/MMM-MyStandings/).
 
+## Recent Improvements
+
+### Tennis Support (v4.8.0+)
+- **Full tennis tournament support**: Displays matches from major tournaments like the US Open, Wimbledon, Australian Open, and French Open
+- **Automatic singles filtering**: Only shows singles matches (doubles are automatically filtered out)
+- **Tournament grouping**: Matches are automatically grouped by tournament and gender (e.g., "US Open - Men's Singles", "US Open - Women's Singles")
+- **Player filtering**: Filter by specific players or rankings using the `teams` parameter
+- **Ranking display**: Shows player rankings and country flags
+- **Yesterday's data**: Properly groups yesterday's tennis matches by tournament and gender
+- **Robust error handling**: Gracefully handles missing athlete data to prevent crashes
+
+### Enhanced Display Features
+- **Improved tournament organization**: Tennis matches are displayed with clear tournament and gender separators
+- **Better data processing**: Enhanced error handling for incomplete API data
+- **Consistent formatting**: Yesterday's tennis data matches the current day's display format
+
 ![Screenshot](example2.png)
 
 [![Platform](https://img.shields.io/badge/platform-MagicMirror²-informational)](https://MagicMirror.builders)
@@ -68,10 +84,42 @@ Add MMM-MyScoreboard module to the `modules` array in the `config/config.js` fil
         league: "NFL",
         teams: ["BUF", "NYJ", "NYG"]
       },
+      {
+        league: "TENNIS",
+        teams: [], // Empty array means show all singles matches (doubles are automatically filtered out)
+      },
     ]
 
   }
 },
+```
+
+**Tennis Configuration Examples:**
+
+```js
+// Show all tennis matches (singles only)
+{
+  league: "TENNIS",
+  teams: [], // Empty array shows all singles matches
+}
+
+// Show specific players + top 10 ranked players
+{
+  league: "TENNIS", 
+  teams: ["Novak Djokovic", "Carlos Alcaraz", "@T10"],
+}
+
+// Show only top 25 ranked players
+{
+  league: "TENNIS",
+  teams: ["@T25"],
+}
+
+// Show specific players only
+{
+  league: "TENNIS",
+  teams: ["Iga Swiatek", "Aryna Sabalenka", "Coco Gauff"],
+}
 ```
 
 | Option                 | Description
@@ -135,7 +183,7 @@ Currently this module supports the following leagues.  Use the bold uppercase sh
 - **Ranking filters**: `"@T10"` for top 10 players, `"@T25"` for top 25 players, etc.
 - **Combined**: Mix player names and ranking filters
 
-Leave the `teams` array empty to show all matches. The module will display player names, rankings, and their country flags.
+Leave the `teams` array empty to show all singles matches (doubles are automatically filtered out). The module will display player names, rankings, and their country flags. Tennis matches are automatically grouped by tournament and gender (e.g., "US Open - Men's Singles").
 
 ### Other Leagues
 
@@ -1823,6 +1871,27 @@ You can add your own custom personal logos into the `logos_custom` folder, and t
 There are several ways to display standings for a given league only at certain times of year (e.g., hiding it when the league is not in season).  You could use a separate module such as [MMM-ModuleScheduler](https://github.com/ianperrin/MMM-ModuleScheduler), which can display or hide an entire module instance based on your schedule.
 
 Another way to do it is to dynamically create a module with the desired leagues based on the date by adding some javascript to your config.js file, as offered by user [mikeyounge](https://github.com/mikeyounge) in [this discussion thread](https://github.com/dathbe/MMM-MyScoreboard/issues/56).
+
+## Troubleshooting
+
+### Tennis Display Issues
+
+If you're not seeing tennis matches on your mirror:
+
+1. **Check the tournament schedule**: Tennis tournaments are seasonal. Major tournaments like the US Open, Wimbledon, Australian Open, and French Open have specific dates.
+2. **Verify your configuration**: Make sure you have `league: "TENNIS"` in your sports configuration.
+3. **Check for doubles filtering**: The module automatically filters out doubles matches. If you're only seeing doubles in the API, no matches will display.
+4. **Player name variations**: When filtering by specific players, try different name formats:
+   - Full name: `"Novak Djokovic"`
+   - Short name: `"N. Djokovic"`
+   - Display name: Check the ESPN website for the exact display name
+5. **Ranking filters**: Use `"@T10"` for top 10 players, `"@T25"` for top 25 players, etc.
+
+### General Issues
+
+- **No data showing**: Check your internet connection and verify the API endpoints are accessible
+- **Missing logos**: Custom logos can be added to the `logos_custom` folder
+- **Broadcast issues**: Use the `skipChannels` or `displayLocalChannels` options to control broadcast display
 
 ## Contributing
 
