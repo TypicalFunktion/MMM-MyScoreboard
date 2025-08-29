@@ -708,7 +708,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code.home {
-  left: 150px; /* Adjusted to align with home logo */
+  left: 149px; /* 5px gap after home logo (120px + 24px + 5px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score.visitor {
@@ -726,7 +726,7 @@
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.home-team-first .team-short-code.visitor {
-  left: 180px;
+  left: 149px; /* 5px gap after visitor logo (120px + 24px + 5px) */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos.home-team-first .team-short-code.home {
