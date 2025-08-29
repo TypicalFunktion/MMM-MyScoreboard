@@ -626,12 +626,33 @@ module.exports = {
         var body2 = { events: [] }
         if (body.events && body.events.length > 0) {
           // Tennis data has matches in events[0].groupings[0].competitions
-          // We need to convert this to the standard format
+          // We need to convert this to the standard format and filter out doubles
           body.events.forEach((event) => {
             if (event.groupings && event.groupings.length > 0) {
               event.groupings.forEach((grouping) => {
                 if (grouping.competitions && grouping.competitions.length > 0) {
                   grouping.competitions.forEach((competition) => {
+                    // Early filtering: Skip doubles matches at the data processing level
+                    if (competition.competitors && competition.competitors.length !== 2) {
+                      Log.debug(`[MMM-MyScoreboard] Skipping tennis match ${competition.id}: ${competition.competitors.length} competitors (not singles)`);
+                      return; // Skip doubles matches (4 competitors) or other match types
+                    }
+                    
+                    // Additional early filtering: Skip if grouping name indicates doubles
+                    if (grouping.grouping && grouping.grouping.name && 
+                        grouping.grouping.name.toLowerCase().includes('doubles')) {
+                      Log.debug(`[MMM-MyScoreboard] Skipping tennis match ${competition.id}: grouping indicates doubles`);
+                      return;
+                    }
+                    
+                    // Additional early filtering: Skip if competition type indicates doubles
+                    if (competition.type && 
+                        (competition.type.name && competition.type.name.toLowerCase().includes('doubles')) ||
+                        (competition.type.abbreviation && competition.type.abbreviation.toLowerCase().includes('doubles'))) {
+                      Log.debug(`[MMM-MyScoreboard] Skipping tennis match ${competition.id}: competition type indicates doubles`);
+                      return;
+                    }
+                    
                     // Create a new event for each competition
                     var newEvent = {
                       id: competition.id,
@@ -672,11 +693,39 @@ module.exports = {
       filteredGamesList = data.events.filter(function (game) {
         // Handle tennis data structure
         if (payload.league === 'TENNIS') {
-          // Filter out doubles matches - only show singles matches
+          // Enhanced filtering for tennis matches - only show singles matches
           if (game.competitions && game.competitions[0] && game.competitions[0].competitors) {
             const competitorCount = game.competitions[0].competitors.length;
+            
+            // Skip doubles matches (4 competitors) or other match types
             if (competitorCount !== 2) {
-              return false; // Skip doubles matches (4 competitors) or other match types
+              Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: ${competitorCount} competitors (not singles)`);
+              return false;
+            }
+            
+            // Additional check: verify these are individual players, not teams
+            const player1 = game.competitions[0].competitors[0];
+            const player2 = game.competitions[0].competitors[1];
+            
+            // Skip if either competitor doesn't have athlete data (likely a team/doubles)
+            if (!player1.athlete || !player2.athlete) {
+              Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: missing athlete data`);
+              return false;
+            }
+            
+            // Skip if the competition type indicates doubles
+            if (game.competitions[0].type && 
+                (game.competitions[0].type.name && game.competitions[0].type.name.toLowerCase().includes('doubles')) ||
+                (game.competitions[0].type.abbreviation && game.competitions[0].type.abbreviation.toLowerCase().includes('doubles'))) {
+              Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: competition type indicates doubles`);
+              return false;
+            }
+            
+            // Skip if the grouping indicates doubles
+            if (game.grouping && game.grouping.name && 
+                game.grouping.name.toLowerCase().includes('doubles')) {
+              Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: grouping indicates doubles`);
+              return false;
             }
           }
           

@@ -54,6 +54,8 @@ Module.register('MMM-MyScoreboard', {
       {
         league: 'TENNIS',
         teams: [], // Empty array means show all singles matches (doubles are automatically filtered out)
+        // Optional: Add specific groupings to filter by tournament type
+        // groupings: ['mens-singles', 'womens-singles'], // Uncomment to filter by specific tournament groupings
       },
     ],
   },
