@@ -611,15 +611,25 @@ Module.register('MMM-MyScoreboard', {
 
     // add scores if game in progress or finished
     if (gameObj.gameMode != this.gameModes.FUTURE) {
-      var hTeamScore = document.createElement('span')
-      hTeamScore.classList.add('score', 'home')
-      hTeamScore.innerHTML = (gameObj.hScore)
-      boxScore.appendChild(hTeamScore)
+      // Special handling for tennis scores - show combined set scores in one element
+      if (gameObj.hWinner !== undefined && gameObj.vWinner !== undefined) {
+        // Tennis: show combined set scores
+        var tennisScore = document.createElement('span')
+        tennisScore.classList.add('score', 'tennis-scores')
+        tennisScore.innerHTML = gameObj.hScore
+        boxScore.appendChild(tennisScore)
+      } else {
+        // Standard sports: show separate home and visitor scores
+        var hTeamScore = document.createElement('span')
+        hTeamScore.classList.add('score', 'home')
+        hTeamScore.innerHTML = (gameObj.hScore)
+        boxScore.appendChild(hTeamScore)
 
-      var vTeamScore = document.createElement('span')
-      vTeamScore.classList.add('score', 'visitor')
-      vTeamScore.innerHTML = (gameObj.vScore)
-      boxScore.appendChild(vTeamScore)
+        var vTeamScore = document.createElement('span')
+        vTeamScore.classList.add('score', 'visitor')
+        vTeamScore.innerHTML = (gameObj.vScore)
+        boxScore.appendChild(vTeamScore)
+      }
     }
 
     // add classes to final games
