@@ -672,9 +672,22 @@ module.exports = {
       filteredGamesList = data.events.filter(function (game) {
         // Handle tennis data structure
         if (payload.league === 'TENNIS') {
-          // For tennis, filter by player names or rankings
+          // For tennis, filter by player names, rankings, or groupings
+          if (payload.teams.length === 0 && (!payload.groupings || payload.groupings.length === 0)) {
+            return true // Show all matches if no filters specified
+          }
+          
+          // Filter by tournament groupings (singles vs doubles)
+          if (payload.groupings && payload.groupings.length > 0) {
+            const matchGrouping = game.grouping ? game.grouping.slug : ''
+            if (!payload.groupings.includes(matchGrouping)) {
+              return false // Skip matches that don't match the specified groupings
+            }
+          }
+          
+          // If no player filters specified, show all matches for the specified groupings
           if (payload.teams.length === 0) {
-            return true // Show all matches if no specific players specified
+            return true
           }
           
           // Check for ranking filters like @T10, @T25, etc.
@@ -693,6 +706,11 @@ module.exports = {
           // Check if any of the specified players are in this match
           const player1 = game.competitions[0].competitors[0].athlete
           const player2 = game.competitions[0].competitors[1].athlete
+          
+          // Skip matches with missing athlete data
+          if (!player1 || !player2) {
+            return false
+          }
           
           return payload.teams.some(playerName => {
             // Check against full name, short name, and display name
@@ -745,12 +763,11 @@ module.exports = {
       
       if (payload.league === 'TENNIS') {
         // For tennis, use player names for sorting
-        aTteam = (a.competitions[0].competitors[0].homeAway == 'away'
-          ? a.competitions[0].competitors[0].athlete.shortName
-          : a.competitions[0].competitors[1].athlete.shortName)
-        bTteam = (b.competitions[0].competitors[0].homeAway == 'away'
-          ? b.competitions[0].competitors[0].athlete.shortName
-          : b.competitions[0].competitors[1].athlete.shortName)
+        const aAwayAthlete = a.competitions[0].competitors[0].homeAway == 'away' ? a.competitions[0].competitors[0].athlete : a.competitions[0].competitors[1].athlete
+        const bAwayAthlete = b.competitions[0].competitors[0].homeAway == 'away' ? b.competitions[0].competitors[0].athlete : b.competitions[0].competitors[1].athlete
+        
+        aTteam = aAwayAthlete ? aAwayAthlete.shortName : 'Unknown'
+        bTteam = bAwayAthlete ? bAwayAthlete.shortName : 'Unknown'
       } else {
         aTteam = (a.competitions[0].competitors[0].homeAway == 'away'
           ? a.competitions[0].competitors[0].team.abbreviation
@@ -1016,8 +1033,8 @@ module.exports = {
       
       // Handle tennis data structure first
       if (payload.league === 'TENNIS') {
-        hTeamLong = hTeamData.athlete.displayName
-        vTeamLong = vTeamData.athlete.displayName
+        hTeamLong = hTeamData.athlete ? hTeamData.athlete.displayName : 'Unknown Player'
+        vTeamLong = vTeamData.athlete ? vTeamData.athlete.displayName : 'Unknown Player'
       }
       // For college sports, use the displayName property
       else if (payload.league == 'NCAAF' || payload.league == 'NCAAM') {
@@ -1067,8 +1084,8 @@ module.exports = {
         
         if (payload.league === 'TENNIS') {
           // For tennis, use athlete data instead of team data
-          hTeam = this.formatTennisLastName(hTeamData.athlete.displayName)
-          vTeam = this.formatTennisLastName(vTeamData.athlete.displayName)
+          hTeam = hTeamData.athlete ? this.formatTennisLastName(hTeamData.athlete.displayName) : 'Unknown'
+          vTeam = vTeamData.athlete ? this.formatTennisLastName(vTeamData.athlete.displayName) : 'Unknown'
           hTeamRanking = hTeamData.curatedRank ? this.formatT25Ranking(hTeamData.curatedRank.current) : null
           vTeamRanking = vTeamData.curatedRank ? this.formatT25Ranking(vTeamData.curatedRank.current) : null
           
@@ -1081,8 +1098,8 @@ module.exports = {
           var hWinner = hTeamData.winner || false
           var vWinner = vTeamData.winner || false
           
-          hTeamLogoUrl = hTeamData.athlete.flag ? hTeamData.athlete.flag.href : ''
-          vTeamLogoUrl = vTeamData.athlete.flag ? vTeamData.athlete.flag.href : ''
+          hTeamLogoUrl = hTeamData.athlete && hTeamData.athlete.flag ? hTeamData.athlete.flag.href : ''
+          vTeamLogoUrl = vTeamData.athlete && vTeamData.athlete.flag ? vTeamData.athlete.flag.href : ''
           
           // Add tournament information for tennis
           var tournamentName = game.eventName || 'Tennis' // Get from preserved event data

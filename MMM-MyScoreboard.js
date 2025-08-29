@@ -1085,6 +1085,7 @@ Module.register('MMM-MyScoreboard', {
         localMarkets: self.config.localMarkets,
         debugHours: self.config.debugHours,
         debugMinutes: self.config.debugMinutes,
+        groupings: sport.groupings || null, // Add groupings parameter for tennis filtering
       }
 
       self.sendSocketNotification('MMM-MYSCOREBOARD-GET-SCORES', payload)
