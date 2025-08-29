@@ -647,7 +647,7 @@
 
 /* Tennis-specific adjustments for oneLineWithLogos */
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .team-short-code {
-  width: 85px; /* Increased for longer player names */
+  width: 100px; /* Increased for longer player names */
 }
 
 .MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score {
