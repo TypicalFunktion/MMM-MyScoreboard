@@ -1164,8 +1164,8 @@
 }
 
 .MMM-MyScoreboard .broadcastIcon {
-  height: 15px;
-  max-width: 80px;
+  height: 11.25px; /* 75% of 15px */
+  max-width: 60px; /* 75% of 80px */
   margin: 0px 2px 0px 2px;
 }
 

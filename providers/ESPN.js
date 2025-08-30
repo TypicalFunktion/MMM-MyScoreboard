@@ -727,6 +727,15 @@ module.exports = {
               Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: grouping indicates doubles`);
               return false;
             }
+            
+            // Skip matches with TBD opponents
+            if (player1.athlete === null || player2.athlete === null ||
+                player1.athlete === undefined || player2.athlete === undefined ||
+                (player1.athlete.displayName && player1.athlete.displayName === 'TBD') ||
+                (player2.athlete.displayName && player2.athlete.displayName === 'TBD')) {
+              Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: TBD opponent detected`);
+              return false;
+            }
           }
           
           // For tennis, filter by player names, rankings, or groupings
