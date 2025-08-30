@@ -653,6 +653,16 @@ module.exports = {
                       return;
                     }
                     
+                    // Skip matches not scheduled for today
+                    if (competition.date) {
+                      const competitionDate = moment.tz(competition.date, 'America/New_York').format('YYYYMMDD')
+                      const todayDate = moment().add(payload.debugHours, 'hours').add(payload.debugMinutes, 'minutes').format('YYYYMMDD')
+                      if (competitionDate !== todayDate) {
+                        Log.debug(`[MMM-MyScoreboard] Skipping tennis match ${competition.id}: scheduled for ${competitionDate}, not ${todayDate}`);
+                        return;
+                      }
+                    }
+                    
                     // Create a new event for each competition
                     var newEvent = {
                       id: competition.id,
@@ -736,6 +746,15 @@ module.exports = {
               Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: TBD opponent detected`);
               return false;
             }
+            
+            // Skip matches not scheduled for today
+            if (game.competitions && game.competitions[0] && game.competitions[0].date) {
+              const competitionDate = moment.tz(game.competitions[0].date, localTZ).format('YYYYMMDD')
+              if (competitionDate !== gameDate) {
+                Log.debug(`[MMM-MyScoreboard] Filtering out tennis match ${game.id}: scheduled for ${competitionDate}, not ${gameDate}`);
+                return false;
+              }
+            }
           }
           
           // For tennis, filter by player names, rankings, or groupings
@@ -807,6 +826,18 @@ module.exports = {
     }
 
     filteredGamesList = filteredGamesList.filter(function (event) {
+      // For tennis, check the competition date instead of event date
+      if (payload.league === 'TENNIS') {
+        // Check if any competition in this event is scheduled for today
+        if (event.competitions && event.competitions.length > 0) {
+          return event.competitions.some(competition => {
+            const competitionDate = moment.tz(competition.date, localTZ).format('YYYYMMDD')
+            return competitionDate === gameDate
+          })
+        }
+      }
+      
+      // For other sports, use the event date
       const eventDate = moment.tz(event.date, localTZ).format('YYYYMMDD')
       return eventDate === gameDate
     })
