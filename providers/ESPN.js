@@ -246,6 +246,31 @@ module.exports = {
 
   },
 
+  // Helper function to identify Major tennis tournaments (Grand Slams)
+  isMajorTennisTournament: function(tournamentName, tournamentShortName) {
+    if (!tournamentName && !tournamentShortName) {
+      return false;
+    }
+    
+    // Define Major tournament identifiers
+    const majorTournaments = [
+      'Australian Open',
+      'French Open', 
+      'Wimbledon',
+      'US Open',
+      'Roland Garros' // Alternative name for French Open
+    ];
+    
+    // Check if tournament name contains any major tournament identifier
+    const nameToCheck = (tournamentName || '').toLowerCase();
+    const shortNameToCheck = (tournamentShortName || '').toLowerCase();
+    
+    return majorTournaments.some(major => 
+      nameToCheck.includes(major.toLowerCase()) || 
+      shortNameToCheck.includes(major.toLowerCase())
+    );
+  },
+
   /*
     Used with isSoccer() so that we can quickly identify soccer leagues
     for score display patterns, instead of IFs for each league
@@ -628,6 +653,12 @@ module.exports = {
           // Tennis data has matches in events[0].groupings[0].competitions
           // We need to convert this to the standard format and filter out doubles
           body.events.forEach((event) => {
+            // Filter for Major tournaments only (Grand Slams)
+            if (!this.isMajorTennisTournament(event.name, event.shortName)) {
+              Log.debug(`[MMM-MyScoreboard] Skipping non-major tournament: ${event.name}`);
+              return;
+            }
+            
             if (event.groupings && event.groupings.length > 0) {
               event.groupings.forEach((grouping) => {
                 if (grouping.competitions && grouping.competitions.length > 0) {
