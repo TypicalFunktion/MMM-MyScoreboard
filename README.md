@@ -1917,7 +1917,7 @@ If you're not seeing tennis matches on your mirror:
    - Full name: `"Novak Djokovic"`
    - Short name: `"N. Djokovic"`
    - Display name: Check the ESPN website for the exact display name
-5. **Ranking filters**: Use `"@T10"` for top 10 players, `"@T25"` for top 25 players, etc.
+5. **Ranking filters**: Use `"@T10"` for top 10 players, `"@T25"` for top 25 players, etc,
 
 ### General Issues
 
