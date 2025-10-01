@@ -40,6 +40,7 @@ Intended to match the design aesthetic of, and pair nicely with, [MMM-MyStanding
 - **Ranking display**: Shows player rankings and country flags
 - **Yesterday's data**: Properly groups yesterday's tennis matches by tournament and gender
 - **Robust error handling**: Gracefully handles missing athlete data to prevent crashes
+- **Optimized score display**: Tennis scores use smaller font sizes to accommodate the set score format (e.g., "6-4, 7-6, 6-2")
 
 ### Enhanced Display Features
 - **Improved tournament organization**: Tennis matches are displayed with clear tournament and gender separators
