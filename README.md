@@ -16,6 +16,22 @@ Intended to match the design aesthetic of, and pair nicely with, [MMM-MyStanding
 
 ## Recent Improvements
 
+### Enhanced Soccer Support (v4.13.0+)
+- **SOCCER_ON_TV_NOW**: New league option that shows all soccer matches currently on TV
+- **Improved broadcast display**: Better channel logo support and rotation
+- **Enhanced league headers**: Specific league headers for `ALL_SOCCER`, `SOCCER_ON_TV`, and `RUGBY`
+
+### Playoff Status Display (v4.12.0+)
+- **showPlayoffStatus**: New config option to display playoff series information
+- **Series tracking**: Shows current series status (e.g., "BOS leads 2-1")
+- **View compatibility**: Works with `stacked` and `stackedWithLogos` view styles
+
+### Enhanced Display Features (v4.11.0+)
+- **Module height control**: Set `maxHeight` to limit container height and enable scrolling
+- **Smooth scrolling**: Automatic scrolling when scores don't fit within the specified height
+- **Major League Rugby**: Added support for Major League Rugby
+- **Improved league headers**: Better organization for soccer and rugby leagues
+
 ### Tennis Support (v4.8.0+)
 - **Full tennis tournament support**: Displays matches from major tournaments like the US Open, Wimbledon, Australian Open, and French Open
 - **Automatic singles filtering**: Only shows singles matches (doubles are automatically filtered out)
@@ -88,6 +104,10 @@ Add MMM-MyScoreboard module to the `modules` array in the `config/config.js` fil
         league: "TENNIS",
         teams: [], // Empty array means show all singles matches (doubles are automatically filtered out)
       },
+      {
+        league: "SOCCER_ON_TV_NOW",
+        teams: [], // Shows all soccer matches currently on TV
+      },
     ]
 
   }
@@ -140,7 +160,15 @@ Add MMM-MyScoreboard module to the `modules` array in the `config/config.js` fil
 | `displayLocalChannels` | A list of local channels you would like to display, even if `showLocalBroadcasts` is set to `false`.  This allows you to manually set the local broadcast channels you receive.  I.e., start with no channels and add the ones you want.  `displayLocalChannels` will override any other option to turn off channels.<br><br>**Type** `Array` or `Strings`<br>**Default** `[]`
 | `maxHeight`            | Limit of the height of the container (in pixels). If there are more games than will fit within this height, a scroll animation will start.  For best results, set the limit to show exactly the number of games you want when static. This ensures that any extra games will be fully hidden.  No animation will occur if there are fewer games than fill the container.<br><br>**Type** `Int`<br>**Default** `10000` (will not set a height limit)
 | `scrollSpeed`          | Speed for scrolling. _lower_ numbers are _faster_.<br><br>**Type** `Int`<br>**Default** `6`
-| `showPlayoffStatus`    | Displays information about playoff series when set to `true`. (Currently only works with `stacked` and `stackedWithLogos` views without adding custom css.)<br><br>**Type** `Boolean`<br>**Default** `false`
+| `showPlayoffStatus`    | Displays information about playoff series when set to `true`. Shows current series status (e.g., "BOS leads 2-1"). Currently only works with `stacked` and `stackedWithLogos` views without adding custom css.<br><br>**Type** `Boolean`<br>**Default** `false`
+
+### Height Control and Scrolling
+
+The `maxHeight` and `scrollSpeed` options allow you to control how many games are displayed at once and how they scroll when there are more games than can fit:
+
+- **`maxHeight`**: Set a pixel limit for the container height. When exceeded, games will automatically scroll.
+- **`scrollSpeed`**: Controls scrolling speed (lower numbers = faster scrolling).
+- **Best practice**: Set `maxHeight` to show exactly the number of games you want visible when static.
 
 ### Configuring Your "Sports" List
 
@@ -197,7 +225,7 @@ Leave the `teams` array empty to show all singles matches (doubles are automatic
 #### Most Popular
 * `ALL_SOCCER` - Will return all soccer matches.  The list gets very long, so pair this with a `teams` list.  Useful if your team plays in various cups and competitions.  Note that team abbreviations are not necessarily unique, so your mileage may vary with this "league."
 * `SOCCER_ON_TV` - Will return all soccer matches that have a broadcast option.  Handy if you just want to know what soccer you can watch today.  It will respect your `skipChannels` list and not display games that are only broadcast on one of those channels.
-* `SOCCER_ON_TV_NOW` - Will return all soccer matches currently on tv.  It will respect your `skipChannels` list and not display games that are only broadcast on one of those channels.
+* `SOCCER_ON_TV_NOW` - Will return all soccer matches currently on TV right now.  It will respect your `skipChannels` list and not display games that are only broadcast on one of those channels.
 * `English Premier League`
 * `UEFA_CHAMPIONS` - UEFA Champions League
 * `UEFA_EUROPA` - UEFA Europa League
@@ -398,7 +426,7 @@ Leave the `teams` array empty to show all singles matches (doubles are automatic
 * `INTERNATIONAL_TEST_MATCH`
 * `URBA_TOP_12`
 * `MITRE_10_CUP`
-* `Major League Rugby`
+* `Major League Rugby` - North American professional rugby league
 
 </details>
 
@@ -952,9 +980,15 @@ VAN   Vanderbilt Commodores
 VT    Virginia Tech Hokies
 WAKE  Wake Forest Demon Deacons
 WASH  Washington Huskies
+WCU   Western Carolina Catamounts
+WEB   Weber State Wildcats
+WEBB  Gardner-Webb Bulldogs
+WICH  Wichita State Shockers
+WIN   Winthrop Eagles
 WISC  Wisconsin Badgers
+WIU   Western Illinois Leathernecks
 WKU   Western Kentucky Hilltoppers
-WMU   Western MNichigan Broncos
+WMU   Western Michigan Broncos
 WSU   Washington State Cougars
 WVU   West Virginia Mountaineers
 WYO   Wyoming Cowboys
@@ -1074,7 +1108,6 @@ FIU   Florida Intl Golden Panthers
 FLA   Florida Gators
 FOR   Fordham Rams
 FRES  Fresno State Bulldogs
-FSU   Florida State Seminoles
 FUR   Furman Paladins
 GASO  Georgia Southern Eagles
 GAST  Georgia State Panthers
@@ -1324,12 +1357,8 @@ WEBB  Gardner-Webb Bulldogs
 WICH  Wichita State Shockers
 WIN   Winthrop Eagles
 WISC  Wisconsin Badgers
-WIU   Western Illinois Leathernecks
 WKU   Western Kentucky Hilltoppers
-WM    William & Mary Tribe
 WMU   Western Michigan Broncos
-WOF   Wofford Terriers
-WRST  Wright State Raiders
 WSU   Washington State Cougars
 WVU   West Virginia Mountaineers
 WYO   Wyoming Cowboys
@@ -1337,14 +1366,15 @@ XAV   Xavier Musketeers
 YALE  Yale Bulldogs
 YSU   Youngstown State Penguins
 
-Groups (Division I only.  No groups for March Madness):
+
+Groups:
 ---------------
 Top 25
+ASUN
 America East
 American
 Atlantic 10
 ACC
-Atlantic Sun
 Big 12
 Big East
 Big Sky
@@ -1353,6 +1383,7 @@ Big Ten
 Big West
 Colonial
 Conference USA
+Independents
 Horizon
 Ivy
 MAAC

@@ -1340,19 +1340,19 @@
 } */
 
 /* Tennis score styling - smaller font for set scores */
-.MMM-MyScoreboard .box-score .score.visitor {
+.MMM-MyScoreboard .box-score.TENNIS .score.visitor {
   font-size: 16px;
 }
 
-.MMM-MyScoreboard .box-score.oneLine .score.visitor,
-.MMM-MyScoreboard .box-score.oneLineWithLogos .score.visitor {
+.MMM-MyScoreboard .box-score.TENNIS.oneLine .score.visitor,
+.MMM-MyScoreboard .box-score.TENNIS.oneLineWithLogos .score.visitor {
   font-size: 14px;
 }
 
-.MMM-MyScoreboard .box-score.smallLogos .score.visitor {
+.MMM-MyScoreboard .box-score.TENNIS.smallLogos .score.visitor {
   font-size: 14px;
 }
 
-.MMM-MyScoreboard .box-score.mediumLogos .score.visitor {
+.MMM-MyScoreboard .box-score.TENNIS.mediumLogos .score.visitor {
   font-size: 20px;
 }
